@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-AgroTrackApplication<agro-track>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.payoyo.agro_track.AgroTrackApplication",
+            "projectName": "agro-track",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

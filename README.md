@@ -21,17 +21,5 @@ Está construida con **Spring Boot (backend)** y **React + Tailwind (frontend)**
 - Partes de trabajo diarios (horas y rendimiento opcional en kilos/cajas)
 - Dashboard inicial con KPIs (empleados activos, partes abiertos/cerrados, horas totales, alertas de certificaciones)
 
----
 
-## 🛠️ Instalación (modo desarrollo)
-1. Clonar el repositorio:
-   ```bash
-   git clone https://github.com/<tu-usuario>/agrotrack.git
-   cd agrotrack
-  docker compose up -d
-  cd backend
-./mvnw spring-boot:run
-cd frontend
-npm install
-npm run dev
-´´´
+

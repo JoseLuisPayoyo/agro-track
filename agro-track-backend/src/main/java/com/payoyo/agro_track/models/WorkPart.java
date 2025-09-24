@@ -21,6 +21,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -31,6 +32,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class WorkPart {
     
     @Id
@@ -70,5 +72,6 @@ public class WorkPart {
     private Crew crew;
 
     @OneToMany(mappedBy = "workPart", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<WorkPartEntry> entries = new ArrayList<>();
 }

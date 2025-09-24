@@ -38,8 +38,6 @@ public class EmployeeMapper {
                 .hireDate(employee.getHireDate())
                 .crewId(employee.getCrew().getId())
                 .crewName(employee.getCrew().getName())
-                .farmId(employee.getFarm().getId())
-                .farmName(employee.getFarm().getName())
                 .farmId(employee.getFarm() != null ? employee.getFarm().getId() : null)
                 .farmName(employee.getFarm() != null ? employee.getFarm().getName() : null)
                 .build();                

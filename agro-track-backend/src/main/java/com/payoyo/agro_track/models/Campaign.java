@@ -17,6 +17,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,6 +28,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Campaign {
     
     @Id
@@ -43,7 +45,7 @@ public class Campaign {
 
     private LocalDate endDate;
 
-    @Column(nullable = false ,length = 200)
+    @Column(nullable = false, length = 200)
     @NotNull(message = "La tarea principal de la campaña es obligatoria")
     private String mainTask;
 
@@ -58,6 +60,7 @@ public class Campaign {
     private Crew crew;
 
     @OneToMany(mappedBy = "campaign", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = false)
+    @Builder.Default
     private List<WorkPart> workParts = new ArrayList<>();
 
 }

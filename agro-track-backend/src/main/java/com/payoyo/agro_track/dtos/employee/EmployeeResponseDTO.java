@@ -30,6 +30,6 @@ public class EmployeeResponseDTO {
     private UUID crewId;
     private String crewName;
 
-    private UUID farm_id;
+    private UUID farmId;
     private String farmName;
 }

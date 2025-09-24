@@ -16,6 +16,7 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,6 +27,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Crew {
     
     @Id
@@ -41,5 +43,6 @@ public class Crew {
     private Employee foreman; //encargado de la cuadrilla
 
     @OneToMany(mappedBy = "crew", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = false)
+    @Builder.Default
     private List<Employee> members = new ArrayList<>();
 }

@@ -14,6 +14,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,6 +25,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Farm {
     
     @Id
@@ -38,11 +40,14 @@ public class Farm {
     private String location;
 
     @OneToMany(mappedBy = "farm", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<Parcel> parcels = new ArrayList<>();
 
     @OneToMany(mappedBy = "farm", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = false)
+    @Builder.Default
     private List<Campaign> campaigns = new ArrayList<>();
 
     @OneToMany(mappedBy = "farm", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = false)
+    @Builder.Default
     private List<WorkPart> workParts = new ArrayList<>();
 }

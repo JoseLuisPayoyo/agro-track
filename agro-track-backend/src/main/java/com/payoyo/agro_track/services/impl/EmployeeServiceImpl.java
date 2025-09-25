@@ -108,7 +108,7 @@ public class EmployeeServiceImpl implements EmployeeService{
         employeeRepository.delete(employee);
     }
 
-    // buscar empleado por id
+    // buscar empleado por dni
     @Override
     public EmployeeResponseDTO findByDni(String dni) {
         Employee employee = employeeRepository.findByDni(dni)

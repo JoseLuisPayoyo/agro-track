@@ -7,4 +7,7 @@ public class CrewNotFoundException extends RuntimeException{
     public CrewNotFoundException(UUID id){
         super("Cuadrilla no encontrado con id: " + id);
     }
+    public CrewNotFoundException(String name){
+        super("Cuadrilla no encontrado con nombre: " + name);
+    }
 }

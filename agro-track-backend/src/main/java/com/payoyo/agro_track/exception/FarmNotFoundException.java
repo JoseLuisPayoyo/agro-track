@@ -7,4 +7,8 @@ public class FarmNotFoundException extends RuntimeException{
     public FarmNotFoundException(UUID id){
         super("Finca no encontrado con id: " + id);
     }
+
+    public FarmNotFoundException(String name){
+        super("Finca no encontrado con nombre: " + name);
+    }
 }

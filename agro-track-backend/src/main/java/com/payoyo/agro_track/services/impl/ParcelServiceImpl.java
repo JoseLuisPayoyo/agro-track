@@ -84,10 +84,14 @@ public class ParcelServiceImpl implements ParcelService{
     // buscar por id de finca
     @Override
     public List<ParcelResponseDTO> findByFarmId(UUID farmId) {
-        return parcelRepository.findByFarmId(farmId)
+        farmRepository.findById(farmId)
+            .orElseThrow(() -> new FarmNotFoundException(farmId));
+        List<Parcel> parcels = parcelRepository.findByFarmId(farmId);
+        
+        return parcels
             .stream()
             .map(ParcelMapper::toDTO)
-            .collect(Collectors.toList());
+            .toList();
     }
     
 }

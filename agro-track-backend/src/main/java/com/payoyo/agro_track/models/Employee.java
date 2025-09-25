@@ -82,7 +82,7 @@ public class Employee {
     @Builder.Default
     private List<Certification> certifications = new ArrayList<>();
 
-    @OneToMany(mappedBy = "workPartEntry", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "employee", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<WorkPartEntry> workPartEntries = new ArrayList<>();
 

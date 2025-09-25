@@ -12,7 +12,7 @@ import java.time.LocalDate;
 public interface CertificationRepository extends JpaRepository<Certification, UUID>{
     
     // devuelve todas las certificaciones registradas para un empleado 
-    List<Certification> findCertificationByEmployeed(UUID employeeId);
+    List<Certification> findByEmployeeId(UUID employeeId);
 
     // permite detectar certificaciones cuya fecha de expiración es anterior a una fecha dada 
     List<Certification> findByExpiresAtBefore(LocalDate expiresAt);

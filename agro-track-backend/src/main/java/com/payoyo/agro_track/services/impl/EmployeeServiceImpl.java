@@ -80,8 +80,11 @@ public class EmployeeServiceImpl implements EmployeeService{
             .orElseThrow(() -> new EmployeeNotFoundException(id));
         Crew crew = crewRepository.findById(dto.getCrewId())
             .orElseThrow(() -> new CrewNotFoundException(dto.getCrewId()));
-        Farm farm = farmRepository.findById(dto.getFarmId())
-            .orElseThrow(() -> new FarmNotFoundException(dto.getFarmId()));
+        Farm farm = null;
+        if (dto.getFarmId() != null) {
+            farm = farmRepository.findById(dto.getFarmId())
+                .orElseThrow(() -> new FarmNotFoundException(dto.getFarmId()));    
+        }
         
         // actualizamos los datos
         employee.setName(dto.getName());

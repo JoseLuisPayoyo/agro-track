@@ -14,6 +14,7 @@ public interface EmployeeService {
     EmployeeResponseDTO findById(UUID id);
     List<EmployeeResponseDTO> findAll();
     EmployeeResponseDTO update(UUID id, EmployeeRequestDTO dto);
+    void delete(UUID id);
 
     // métodos personalizados
     EmployeeResponseDTO findByDni(String dni);

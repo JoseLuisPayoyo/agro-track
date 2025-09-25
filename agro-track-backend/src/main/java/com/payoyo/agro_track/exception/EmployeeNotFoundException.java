@@ -7,4 +7,8 @@ public class EmployeeNotFoundException extends RuntimeException{
     public EmployeeNotFoundException(UUID id){
         super("Empleado no encontrado con id: " + id);
     }
+
+    public EmployeeNotFoundException(String dni){
+        super("Empleado no encontrado con dni: " + dni);
+    }
 }

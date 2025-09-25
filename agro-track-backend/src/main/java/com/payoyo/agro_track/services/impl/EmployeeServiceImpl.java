@@ -39,8 +39,12 @@ public class EmployeeServiceImpl implements EmployeeService{
             .orElseThrow(() -> new CrewNotFoundException(dto.getCrewId()));
         
         // obtenemos la finca si existe
-        Farm farm = farmRepository.findById(dto.getFarmId())
-            .orElseThrow(() -> new FarmNotFoundException(dto.getFarmId()));
+        Farm farm = null;
+        if (dto.getFarmId() != null) {
+            farm = farmRepository.findById(dto.getFarmId())
+                .orElseThrow(() -> new FarmNotFoundException(dto.getFarmId()));    
+        }
+        
         
         // convertimos dto a enitdad
         Employee employee = EmployeeMapper.toEntity(dto, crew, farm);

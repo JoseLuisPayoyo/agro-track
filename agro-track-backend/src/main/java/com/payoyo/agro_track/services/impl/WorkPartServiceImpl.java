@@ -15,6 +15,7 @@ import com.payoyo.agro_track.exception.FarmNotFoundException;
 import com.payoyo.agro_track.exception.ParcelNotFoundException;
 import com.payoyo.agro_track.exception.WorkPartNotFoundException;
 import com.payoyo.agro_track.mappers.WorkPartMapper;
+import com.payoyo.agro_track.models.Campaign;
 import com.payoyo.agro_track.models.Crew;
 import com.payoyo.agro_track.models.Farm;
 import com.payoyo.agro_track.models.Parcel;
@@ -47,9 +48,11 @@ public class WorkPartServiceImpl implements WorkPartService{
         Parcel parcel = parcelRepository.findById(dto.getParcelId())
             .orElseThrow(() -> new ParcelNotFoundException(dto.getParcelId()));
         Crew crew = crewRepository.findById(dto.getCrewId())
-            .orElseThrow(() -> new CrewNotFoundException(dto.getCrewId()));   
+            .orElseThrow(() -> new CrewNotFoundException(dto.getCrewId()));  
+        Campaign campaign = campaignRepository.findById(dto.getCampaignId())
+            .orElseThrow(() -> new CampaignNotFoundException(dto.getCampaignId())); 
              
-        WorkPart workPart  = WorkPartMapper.toEntity(dto, farm, parcel, crew);
+        WorkPart workPart  = WorkPartMapper.toEntity(dto, farm, parcel, crew, campaign);
 
         WorkPart workPartSaved = workPartRepository.save(workPart);
 

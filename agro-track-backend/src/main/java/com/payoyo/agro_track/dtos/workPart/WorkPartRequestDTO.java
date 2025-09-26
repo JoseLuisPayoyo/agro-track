@@ -39,4 +39,7 @@ public class WorkPartRequestDTO {
 
     @NotNull(message = "La cuadrilla es obligatoria")
     private UUID crewId;
+
+    @NotNull(message = "La campaña es obligatoria")
+    private UUID campaignId;
 }

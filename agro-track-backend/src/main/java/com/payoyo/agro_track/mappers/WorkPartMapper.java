@@ -2,6 +2,7 @@ package com.payoyo.agro_track.mappers;
 
 import com.payoyo.agro_track.dtos.workPart.WorkPartRequestDTO;
 import com.payoyo.agro_track.dtos.workPart.WorkPartResponseDTO;
+import com.payoyo.agro_track.models.Campaign;
 import com.payoyo.agro_track.models.Crew;
 import com.payoyo.agro_track.models.Farm;
 import com.payoyo.agro_track.models.Parcel;
@@ -9,7 +10,7 @@ import com.payoyo.agro_track.models.WorkPart;
 
 public class WorkPartMapper {
 
-    public static WorkPart toEntity(WorkPartRequestDTO dto, Farm farm, Parcel parcel, Crew crew){
+    public static WorkPart toEntity(WorkPartRequestDTO dto, Farm farm, Parcel parcel, Crew crew, Campaign campaign){
         return WorkPart.builder()
                 .date(dto.getDate())
                 .task(dto.getTask())
@@ -18,6 +19,7 @@ public class WorkPartMapper {
                 .farm(farm)
                 .parcel(parcel)
                 .crew(crew)
+                .campaign(campaign)
                 .build();
     }
 

@@ -6,17 +6,18 @@ import { LayoutDashboard, Users2, Factory, ClipboardList, MapPinned, FolderKanba
 export function AppLayout() {
 return (
 <div className="min-h-screen grid grid-cols-[260px_1fr]">
-<aside className="bg-white border-r border-gray-200 p-4">
-<div className="text-2xl font-bold text-brand-700 mb-6">AgroTrack</div>
-<nav className="space-y-1">
-<SideLink to="/" icon={<LayoutDashboard size={18} />}>Dashboard</SideLink>
-<SideLink to="/employees" icon={<Users2 size={18} />}>Empleados</SideLink>
-<SideLink to="/crews" icon={<FolderKanban size={18} />}>Cuadrillas</SideLink>
-<SideLink to="/farms" icon={<Factory size={18} />}>Fincas</SideLink>
-<SideLink to="/campaigns" icon={<MapPinned size={18} />}>Campañas</SideLink>
-<SideLink to="/workparts" icon={<ClipboardList size={18} />}>Partes</SideLink>
-</nav>
+<aside className="bg-gray-50 border-r border-gray-200 p-4">
+  <div className="text-2xl font-bold text-brand-600 mb-8">AgroTrack</div>
+  <nav className="space-y-2">
+    <SideLink to="/" icon={<LayoutDashboard size={18} />}>Dashboard</SideLink>
+    <SideLink to="/employees" icon={<Users2 size={18} />}>Empleados</SideLink>
+    <SideLink to="/crews" icon={<FolderKanban size={18} />}>Cuadrillas</SideLink>
+    <SideLink to="/farms" icon={<Factory size={18} />}>Fincas</SideLink>
+    <SideLink to="/campaigns" icon={<MapPinned size={18} />}>Campañas</SideLink>
+    <SideLink to="/workparts" icon={<ClipboardList size={18} />}>Partes</SideLink>
+  </nav>
 </aside>
+
 <main className="bg-gray-50">
 <header className="h-14 bg-white border-b border-gray-200 flex items-center px-6 justify-between">
 <div className="font-medium">Panel</div>

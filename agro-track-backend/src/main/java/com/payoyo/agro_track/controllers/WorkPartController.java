@@ -24,7 +24,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/workparts")
+@RequestMapping("/api/work-parts")
 @RequiredArgsConstructor
 public class WorkPartController {
     

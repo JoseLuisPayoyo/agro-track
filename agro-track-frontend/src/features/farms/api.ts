@@ -1,28 +1,22 @@
-import { Farm } from "./types"
-
 import api from "@/lib/axios"
+import { Farm, FarmFormData } from "./types"
 
-export const getFarms = async () => {
-  const { data } = await api.get("/api/farms")
-  return data
+export async function getFarms() {
+  const res = await api.get<Farm[]>("/api/farms")
+  return res.data
 }
 
-
-export const getFarm = async (id: number): Promise<Farm> => {
-  const { data } = await api.get(`/api/farms/id/${id}`)
-  return data
+export async function createFarm(data: FarmFormData) {
+  const res = await api.post<Farm>("/api/farms", data)
+  return res.data
 }
 
-export const createFarm = async (farm: Omit<Farm, "id">): Promise<Farm> => {
-  const { data } = await api.post("/api/farms", farm)
-  return data
+export async function updateFarm(id: number, data: FarmFormData) {
+  const res = await api.put<Farm>(`/api/farms/${id}`, data)
+  return res.data
 }
 
-export const updateFarm = async (id: number, farm: Partial<Farm>): Promise<Farm> => {
-  const { data } = await api.put(`/api/farms/${id}`, farm)
-  return data
-}
-
-export const deleteFarm = async (id: number): Promise<void> => {
+export async function deleteFarm(id: number) {
   await api.delete(`/api/farms/${id}`)
+  return id
 }

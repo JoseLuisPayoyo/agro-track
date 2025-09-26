@@ -5,6 +5,7 @@ import EmployeeDetail from "@/features/employees/pages/Detail"
 import EmployeeEdit from "@/features/employees/pages/Edit"
 import FarmListPage from "@/features/farms/pages/List"
 
+
 export function AppRoutes() {
   return useRoutes([
     { path: "/", element: <DashboardPage /> },

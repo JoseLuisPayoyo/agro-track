@@ -14,6 +14,7 @@ export default function FarmListPage() {
 
   const [openForm, setOpenForm] = useState(false)
   const [editingFarm, setEditingFarm] = useState<number | null>(null)
+  console.log("Holaa")
 
   if (isLoading) return <p className="text-gray-500">Cargando...</p>
 
@@ -36,7 +37,7 @@ export default function FarmListPage() {
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-semibold text-gray-800">Fincas</h1>
         <Button onClick={() => setOpenForm(true)}>+ Nueva Finca</Button>
-      </div>
+    </div>
 
       {/* Tabla */}
       <div className="bg-white shadow rounded-lg overflow-hidden">
@@ -90,23 +91,23 @@ export default function FarmListPage() {
       {/* Modal con formulario */}
       <Dialog open={openForm} onOpenChange={setOpenForm}>
         <div className="p-6 bg-white rounded-lg shadow-lg w-[400px]">
-          <h2 className="text-lg font-semibold mb-4">
+            <h2 className="text-lg font-semibold mb-4">
             {editingFarm ? "Editar Finca" : "Nueva Finca"}
-          </h2>
-          <FarmForm
+            </h2>
+            <FarmForm
             defaultValues={
-              editingFarm
+                editingFarm
                 ? data?.find((f) => f.id === editingFarm)
                 : undefined
             }
             onSubmit={handleSubmit}
             onCancel={() => {
-              setOpenForm(false)
-              setEditingFarm(null)
+                setOpenForm(false)
+                setEditingFarm(null)
             }}
-          />
+            />
         </div>
-      </Dialog>
+    </Dialog>
     </div>
   )
 }

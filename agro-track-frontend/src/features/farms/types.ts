@@ -4,3 +4,8 @@ export interface Farm {
   description?: string
   parcelCount?: number
 }
+
+export interface FarmFormData {
+  name: string
+  description?: string
+}

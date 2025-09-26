@@ -60,7 +60,7 @@ export default function FarmListPage() {
               >
                 <td className="px-6 py-4 font-medium text-gray-900">{farm.name}</td>
                 <td className="px-6 py-4">{farm.parcelCount ?? 0}</td>
-                <td className="px-6 py-4 text-gray-600">{farm.description ?? "-"}</td>
+                <td className="px-6 py-4 text-gray-600">{farm.location ?? "-"}</td>
                 <td className="px-6 py-4 text-right space-x-3">
                   <button
                     className="text-blue-600 hover:underline"

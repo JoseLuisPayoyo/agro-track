@@ -33,12 +33,12 @@ export function FarmForm({ defaultValues, onSubmit, onCancel }: Props) {
       </div>
 
       <div>
-        <label className="block text-sm font-medium">Descripción</label>
+        <label className="block text-sm font-medium">Ubicación</label>
         <textarea
-          {...register("description")}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-        />
+            {...register("location")}
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"/>
       </div>
+
 
       <div className="flex justify-end gap-2">
         {onCancel && (

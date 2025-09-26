@@ -1,11 +1,11 @@
 export interface Farm {
   id: number
   name: string
-  description?: string
+  location?: string
   parcelCount?: number
 }
 
 export interface FarmFormData {
   name: string
-  description?: string
+  location?: string
 }

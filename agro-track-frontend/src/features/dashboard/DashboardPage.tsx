@@ -8,9 +8,9 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recha
 
 export default function DashboardPage() {
   const data = [
-    { name: "Activos", value: 32 },
-    { name: "Cuadrillas", value: 6 },
-    { name: "Fincas", value: 9 },
+    { name: "Activos", value: 25 },
+    { name: "Cuadrillas", value: 3 },
+    { name: "Fincas", value: 12 },
   ]
 
   return (

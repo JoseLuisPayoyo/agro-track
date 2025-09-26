@@ -88,6 +88,8 @@ public class WorkPartServiceImpl implements WorkPartService{
             .orElseThrow(() -> new ParcelNotFoundException(dto.getParcelId()));
         Crew crew = crewRepository.findById(dto.getCrewId())
             .orElseThrow(() -> new CrewNotFoundException(dto.getCrewId()));
+        Campaign campaign = campaignRepository.findById(dto.getCampaignId())
+            .orElseThrow(() -> new CampaignNotFoundException(dto.getCampaignId())); 
 
         // actualizamos los datos
         workPart.setDate(dto.getDate());
@@ -97,6 +99,7 @@ public class WorkPartServiceImpl implements WorkPartService{
         workPart.setFarm(farm);
         workPart.setParcel(parcel);
         workPart.setCrew(crew);
+        workPart.setCampaign(campaign);
 
         WorkPart workPartSaved = workPartRepository.save(workPart);
 
@@ -149,10 +152,10 @@ public class WorkPartServiceImpl implements WorkPartService{
 
     // listar por campaña
     @Override
-    public List<WorkPartResponseDTO> findByCampaignId(UUID campainId) {
-        campaignRepository.findById(campainId)
-            .orElseThrow(() -> new CampaignNotFoundException(campainId));
-        List<WorkPart> workParts = workPartRepository.findByCampaignId(campainId);
+    public List<WorkPartResponseDTO> findByCampaignId(UUID campaignId) {
+        campaignRepository.findById(campaignId)
+            .orElseThrow(() -> new CampaignNotFoundException(campaignId));
+        List<WorkPart> workParts = workPartRepository.findByCampaignId(campaignId);
         
         return workParts
             .stream()

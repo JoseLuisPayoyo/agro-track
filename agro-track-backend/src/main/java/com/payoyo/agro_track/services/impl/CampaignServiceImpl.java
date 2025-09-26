@@ -61,30 +61,74 @@ public class CampaignServiceImpl implements CampaignService{
             .orElseThrow(() -> new CampaignNotFoundException(id));
         return CampaignMapper.toDTO(campaign);    
     }
+
+    // actualizar campaña
     @Override
     public CampaignResponseDTO update(UUID id, CampaignRequestDTO dto) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
+        Campaign campaign = campaignRepository.findById(id)
+            .orElseThrow(() -> new CampaignNotFoundException(id));
+        Crew crew = crewRepository.findById(dto.getCrewId())
+            .orElseThrow(() -> new CrewNotFoundException(dto.getCrewId()));
+        Farm farm = farmRepository.findById(dto.getFarmId())
+            .orElseThrow(() -> new FarmNotFoundException(dto.getFarmId()));
+
+        // actualizamos los datos
+        campaign.setName(dto.getName());
+        campaign.setStartDate(dto.getStartDate());
+        campaign.setEndDate(dto.getEndDate());
+        campaign.setMainTask(dto.getMainTask());
+        campaign.setCrew(crew);
+        campaign.setFarm(farm);
+        
+        Campaign campaignSaved = campaignRepository.save(campaign);
+
+        return CampaignMapper.toDTO(campaignSaved);
     }
+
+    // eliminar campaña
     @Override
     public void delete(UUID id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'delete'");
+        Campaign campaign = campaignRepository.findById(id)
+            .orElseThrow(() -> new CampaignNotFoundException(id));
+        campaignRepository.delete(campaign);    
     }
+
+    // buscar camapañas por parcelas
     @Override
     public List<CampaignResponseDTO> findByFarmId(UUID farmId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findByFarmId'");
+        farmRepository.findById(farmId)
+            .orElseThrow(() -> new FarmNotFoundException(farmId));
+        List<Campaign> campaigns = campaignRepository.findByFarmId(farmId);
+        
+        return campaigns
+            .stream()
+            .map(CampaignMapper::toDTO)
+            .collect(Collectors.toList());
     }
+
+    // buscar campañas por cuadrilla
     @Override
     public List<CampaignResponseDTO> findByCrewId(UUID crewId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findByCrewId'");
+        crewRepository.findById(crewId)
+            .orElseThrow(() -> new CrewNotFoundException(crewId));
+        List<Campaign> campaigns = campaignRepository.findByCrewId(crewId);
+        
+        return campaigns
+            .stream()
+            .map(CampaignMapper::toDTO)
+            .collect(Collectors.toList());
     }
+
+    // buscar campañas por fecha
     @Override
     public List<CampaignResponseDTO> findByStartDateBetween(LocalDate from, LocalDate to) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findByStartDateBetween'");
+        
+        List<Campaign> campaigns = campaignRepository.findByStartDateBetween(from, to);
+
+        return campaigns
+            .stream()
+            .map(CampaignMapper::toDTO)
+            .collect(Collectors.toList());
     }
     
 }

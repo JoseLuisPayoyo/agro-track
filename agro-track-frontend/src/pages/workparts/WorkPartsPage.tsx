@@ -40,7 +40,7 @@ export default function WorkPartsPage() {
     farmsService.getAll().then(r=> setFarms(r.map(f=>({value:f.id,label:f.name}))))
     parcelsService.getAll().then(r=> setParcels(r.map(p=>({value:p.id,label:p.name}))))
     campaignsService.getAll().then(r=> setCampaigns(r.map(c=>({value:c.id,label:c.name}))))
-    crewsService.getAll().then(r=> setCrews(r.map(c=>({value:c.id,label:c.nombre}))))
+    crewsService.getAll().then(r=> setCrews(r.map(c=>({value:c.id,label:c.foremanName}))))
   }, [])
 
   const onSubmit = async () => {

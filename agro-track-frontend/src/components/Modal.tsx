@@ -11,7 +11,7 @@ export default function Modal({
   if (!open) return null
   return (
     <div className="fixed inset-0 bg-black/30 z-50 flex items-center justify-center">
-      <div className="bg-white w-full max-w-2xl rounded-2xl shadow-xl">
+      <div className="bg-white w-full max-w-6xl rounded-2xl shadow-xl">
         <div className="flex items-center justify-between p-4 border-b">
           <h3 className="font-semibold">{title}</h3>
           <button className="text-gray-500" onClick={onClose}>✕</button>

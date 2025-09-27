@@ -7,6 +7,11 @@ export interface Crew {
   foremanName: string
 }
 
+export interface CrewRequest {
+  name: string
+  foremanId: string
+}
+
 export const crewsService = {
   getAll: async (): Promise<Crew[]> => {
     const res = await api.get<Crew[]>('/crews')
@@ -16,7 +21,7 @@ export const crewsService = {
     const res = await api.get<Crew>(`/crews/id/${id}`)
     return res.data
   },
-  create: async (data: Partial<Crew>) => api.post('/crews', data),
-  update: async (id: string, data: Partial<Crew>) => api.put(`/crews/${id}`, data),
+  create: async (data: CrewRequest) => api.post('/crews', data),
+  update: async (id: string, data: CrewRequest) => api.put(`/crews/${id}`, data),
   remove: async (id: string) => api.delete(`/crews/${id}`),
 }

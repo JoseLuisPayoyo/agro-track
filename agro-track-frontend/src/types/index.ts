@@ -1,5 +1,10 @@
 // Enums
-export type EmployeeStatus = 'ACTIVE' | 'INACTIVE' | 'LEAVE'
+export enum EmployeeStatus {
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
+  LEAVE = 'LEAVE'
+}
+
 export type CertificationType = 'FITOSANITARIOS' | 'USO_EPI' | 'MANEJO_CARRETILLA' | 'PRL_BASICO' | 'MANEJO_MAQUINARIA'
 export type WorkPartStatus = 'OPEN' | 'CLOSED'
 
@@ -7,7 +12,7 @@ export type WorkPartStatus = 'OPEN' | 'CLOSED'
 export interface Employee {
   id: string
   name: string
-  lastname: string
+  lastName: string
   dni: string
   email: string
   phone: string

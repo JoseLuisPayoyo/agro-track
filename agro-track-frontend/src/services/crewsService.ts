@@ -9,7 +9,7 @@ export interface Crew {
 
 export interface CrewRequest {
   name: string
-  foremanId: string
+  foremanId?: string
 }
 
 export const crewsService = {

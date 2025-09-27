@@ -28,7 +28,7 @@ export default function WorkerEntriesPage() {
   useEffect(()=>{
     load()
     employeesService.getAll().then(r=> 
-      setEmployees(r.map(e=>({value:e.id,label:`${e.name} ${e.lastname}`})))
+      setEmployees(r.map(e=>({value:e.id,label:`${e.name} ${e.lastName}`})))
     )
   }, [workPartId])
 

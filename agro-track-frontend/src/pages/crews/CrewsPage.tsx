@@ -21,7 +21,10 @@ export default function CrewsPage() {
   useEffect(() => {
     load()
     employeesService.getAll().then(r =>
-      setEmployees(r.map(e => ({ value: e.id, label: `${e.name} ${e.lastname}` })))
+      setEmployees(r.map(e => ({
+        value: e.id,
+        label: `${e.name} ${e.lastName}` 
+      })))
     )
   }, [])
 
@@ -29,7 +32,7 @@ export default function CrewsPage() {
     try {
       const payload = {
         name: model.name!,
-        foremanId: model.foremanId!
+        foremanId: model.foremanId || undefined // 
       }
 
       if (model.id) {
@@ -39,9 +42,7 @@ export default function CrewsPage() {
         await crewsService.create(payload)
         toast.success('Cuadrilla creada')
       }
-      setOpen(false)
-      setModel(empty)
-      load()
+      setOpen(false); setModel(empty); load()
     } catch {
       toast.error('Error al guardar')
     }
@@ -51,8 +52,7 @@ export default function CrewsPage() {
     try {
       if (confirm.id) await crewsService.remove(confirm.id)
       toast.success('Cuadrilla eliminada')
-      setConfirm({ open: false })
-      load()
+      setConfirm({ open: false }); load()
     } catch {
       toast.error('No se pudo eliminar')
     }
@@ -64,10 +64,7 @@ export default function CrewsPage() {
         <h1 className="text-2xl font-bold">Cuadrillas</h1>
         <button
           className="px-3 py-2 bg-brand-600 text-white rounded-lg"
-          onClick={() => {
-            setModel(empty)
-            setOpen(true)
-          }}
+          onClick={() => { setModel(empty); setOpen(true) }}
         >
           Añadir cuadrilla
         </button>
@@ -75,11 +72,7 @@ export default function CrewsPage() {
 
       <Table>
         <thead>
-          <tr>
-            <Th>Nombre</Th>
-            <Th>Encargado</Th>
-            <Th>Acciones</Th>
-          </tr>
+          <tr><Th>Nombre</Th><Th>Encargado</Th><Th>Acciones</Th></tr>
         </thead>
         <tbody>
           {data.map(c => (
@@ -90,10 +83,7 @@ export default function CrewsPage() {
                 <div className="flex gap-2">
                   <button
                     className="px-2 py-1 text-sm border rounded"
-                    onClick={() => {
-                      setModel(c)
-                      setOpen(true)
-                    }}
+                    onClick={() => { setModel(c); setOpen(true) }}
                   >
                     Editar
                   </button>
@@ -110,11 +100,7 @@ export default function CrewsPage() {
         </tbody>
       </Table>
 
-      <Modal
-        open={open}
-        title={model.id ? 'Editar cuadrilla' : 'Añadir cuadrilla'}
-        onClose={() => setOpen(false)}
-      >
+      <Modal open={open} title={model.id ? 'Editar cuadrilla' : 'Añadir cuadrilla'} onClose={() => setOpen(false)}>
         <div className="space-y-3">
           <Row label="Nombre">
             <input
@@ -127,20 +113,16 @@ export default function CrewsPage() {
             <select
               className="border rounded px-3 py-2"
               value={model.foremanId || ''}
-              onChange={e => setModel({ ...model, foremanId: e.target.value })}
+              onChange={e => setModel({ ...model, foremanId: e.target.value || undefined })}
             >
               <option value="">Selecciona encargado</option>
               {employees.map(emp => (
-                <option key={emp.value} value={emp.value}>
-                  {emp.label}
-                </option>
+                <option key={emp.value} value={emp.value}>{emp.label}</option>
               ))}
             </select>
           </Row>
           <div className="flex justify-end">
-            <button className="px-3 py-2 border rounded" onClick={onSubmit}>
-              Guardar
-            </button>
+            <button className="px-3 py-2 border rounded" onClick={onSubmit}>Guardar</button>
           </div>
         </div>
       </Modal>

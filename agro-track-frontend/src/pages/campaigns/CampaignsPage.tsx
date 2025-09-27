@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Campaign, Farm } from '../../types'
+import { Campaign } from '../../types'
 import { campaignsService } from '../../services/campaignsService'
 import { farmsService } from '../../services/farmsService'
 import { crewsService, Crew } from '../../services/crewsService'
@@ -9,12 +9,12 @@ import ConfirmDialog from '../../components/ConfirmDialog'
 import toast from 'react-hot-toast'
 
 const empty: Partial<Campaign> = {
-  nombre: '',
-  fechaInicio: '',
-  fechaFin: '',
-  tareaPrincipal: '',
-  fincaId: '',
-  cuadrillaId: ''
+  name: '',
+  startDate: '',
+  endDate: '',
+  mainTask: '',
+  farmId: '',
+  crewId: ''
 }
 
 export default function CampaignsPage() {
@@ -29,7 +29,7 @@ export default function CampaignsPage() {
 
   useEffect(()=>{
     load()
-    farmsService.getAll().then(r=> setFarms(r.map((f:Farm)=>({value:f.id,label:f.nombre}))))
+    farmsService.getAll().then(r=> setFarms(r.map(f=>({value:f.id,label:f.nombre}))))
     crewsService.getAll().then(r=> setCrews(r.map((c:Crew)=>({value:c.id,label:c.nombre}))))
   }, [])
 
@@ -71,18 +71,19 @@ export default function CampaignsPage() {
       <Table>
         <thead>
           <tr>
-            <Th>Nombre</Th><Th>Inicio</Th><Th>Fin</Th><Th>Tarea principal</Th><Th>Finca</Th><Th>Cuadrilla</Th><Th>Acciones</Th>
+            <Th>Nombre</Th><Th>Inicio</Th><Th>Fin</Th><Th>Tarea principal</Th>
+            <Th>Finca</Th><Th>Cuadrilla</Th><Th>Acciones</Th>
           </tr>
         </thead>
         <tbody>
           {data.map(c=>(
             <tr key={c.id}>
-              <Td>{c.nombre}</Td>
-              <Td>{fmt(c.fechaInicio)}</Td>
-              <Td>{fmt(c.fechaFin)}</Td>
-              <Td>{c.tareaPrincipal}</Td>
-              <Td>{c.fincaNombre}</Td>
-              <Td>{c.cuadrillaNombre}</Td>
+              <Td>{c.name}</Td>
+              <Td>{fmt(c.startDate)}</Td>
+              <Td>{fmt(c.endDate)}</Td>
+              <Td>{c.mainTask}</Td>
+              <Td>{c.farmName}</Td>
+              <Td>{c.crewName}</Td>
               <Td>
                 <div className="flex gap-2">
                   <button className="px-2 py-1 text-sm border rounded"
@@ -100,36 +101,36 @@ export default function CampaignsPage() {
         <div className="space-y-3">
           <Row label="Nombre">
             <input className="border rounded px-3 py-2"
-              value={model.nombre||''}
-              onChange={e=>setModel({...model, nombre:e.target.value})}/>
+              value={model.name||''}
+              onChange={e=>setModel({...model, name:e.target.value})}/>
           </Row>
           <Row label="Fecha inicio">
             <input type="date" className="border rounded px-3 py-2"
-              value={model.fechaInicio?.slice(0,10)||''}
-              onChange={e=>setModel({...model, fechaInicio:e.target.value})}/>
+              value={model.startDate?.slice(0,10)||''}
+              onChange={e=>setModel({...model, startDate:e.target.value})}/>
           </Row>
           <Row label="Fecha fin">
             <input type="date" className="border rounded px-3 py-2"
-              value={model.fechaFin?.slice(0,10)||''}
-              onChange={e=>setModel({...model, fechaFin:e.target.value})}/>
+              value={model.endDate?.slice(0,10)||''}
+              onChange={e=>setModel({...model, endDate:e.target.value})}/>
           </Row>
           <Row label="Tarea principal">
             <input className="border rounded px-3 py-2"
-              value={model.tareaPrincipal||''}
-              onChange={e=>setModel({...model, tareaPrincipal:e.target.value})}/>
+              value={model.mainTask||''}
+              onChange={e=>setModel({...model, mainTask:e.target.value})}/>
           </Row>
           <Row label="Finca">
             <select className="border rounded px-3 py-2"
-              value={model.fincaId||''}
-              onChange={e=>setModel({...model, fincaId:e.target.value})}>
+              value={model.farmId||''}
+              onChange={e=>setModel({...model, farmId:e.target.value})}>
               <option value="">Selecciona</option>
               {farms.map(f=><option key={f.value} value={f.value}>{f.label}</option>)}
             </select>
           </Row>
           <Row label="Cuadrilla">
             <select className="border rounded px-3 py-2"
-              value={model.cuadrillaId||''}
-              onChange={e=>setModel({...model, cuadrillaId:e.target.value})}>
+              value={model.crewId||''}
+              onChange={e=>setModel({...model, crewId:e.target.value})}>
               <option value="">Selecciona</option>
               {crews.map(q=><option key={q.value} value={q.value}>{q.label}</option>)}
             </select>

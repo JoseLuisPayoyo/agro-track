@@ -7,7 +7,7 @@ import ConfirmDialog from '../../components/ConfirmDialog'
 import { Link } from 'react-router-dom'
 import toast from 'react-hot-toast'
 
-const empty: Partial<Farm> = { nombre:'', ubicacion:'' }
+const empty: Partial<Farm> = { name:'', location:'' }
 
 export default function FarmsPage() {
   const [data, setData] = useState<Farm[]>([])
@@ -58,8 +58,8 @@ export default function FarmsPage() {
         <tbody>
           {data.map(f=>(
             <tr key={f.id}>
-              <Td>{f.nombre}</Td>
-              <Td>{f.ubicacion}</Td>
+              <Td>{f.name}</Td>
+              <Td>{f.location}</Td>
               <Td>
                 <div className="flex gap-2">
                   <button className="px-2 py-1 text-sm border rounded"
@@ -79,13 +79,13 @@ export default function FarmsPage() {
         <div className="space-y-3">
           <Row label="Nombre">
             <input className="border rounded px-3 py-2"
-              value={model.nombre||''}
-              onChange={e=>setModel({...model, nombre:e.target.value})}/>
+              value={model.name||''}
+              onChange={e=>setModel({...model, name:e.target.value})}/>
           </Row>
           <Row label="Ubicación">
             <input className="border rounded px-3 py-2"
-              value={model.ubicacion||''}
-              onChange={e=>setModel({...model, ubicacion:e.target.value})}/>
+              value={model.location||''}
+              onChange={e=>setModel({...model, location:e.target.value})}/>
           </Row>
           <div className="flex justify-end">
             <button className="px-3 py-2 border rounded" onClick={onSubmit}>Guardar</button>

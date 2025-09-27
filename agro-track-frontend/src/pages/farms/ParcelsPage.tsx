@@ -7,7 +7,7 @@ import Modal from '../../components/Modal'
 import ConfirmDialog from '../../components/ConfirmDialog'
 import toast from 'react-hot-toast'
 
-const empty: Partial<Parcel> = { nombre:'' }
+const empty: Partial<Parcel> = { name:'' }
 
 export default function ParcelsPage() {
   const { farmId } = useParams()
@@ -17,18 +17,14 @@ export default function ParcelsPage() {
   const [confirm, setConfirm] = useState<{open:boolean; id?:string}>({open:false})
 
   const load = () => {
-    parcelsService.getAll().then(all => {
-      // filtramos en frontend porque el backend no tiene endpoint específico de finca
-      const filtered = all.filter(p => p.fincaId === farmId)
-      setData(filtered)
-    })
+    if (farmId) parcelsService.getByFarm(farmId).then(setData)
   }
 
   useEffect(()=>{ load() }, [farmId])
 
   const onSubmit = async () => {
     try {
-      const payload = { ...model, fincaId: farmId }
+      const payload = { ...model, farmId }
       if (model.id) {
         await parcelsService.update(model.id, payload)
         toast.success('Parcela actualizada')
@@ -67,8 +63,8 @@ export default function ParcelsPage() {
         <tbody>
           {data.map(p=>(
             <tr key={p.id}>
-              <Td>{p.nombre}</Td>
-              <Td>{p.fincaNombre ?? '—'}</Td>
+              <Td>{p.name}</Td>
+              <Td>{p.farmName}</Td>
               <Td>
                 <div className="flex gap-2">
                   <button className="px-2 py-1 text-sm border rounded"
@@ -86,8 +82,8 @@ export default function ParcelsPage() {
         <div className="space-y-3">
           <Row label="Nombre">
             <input className="border rounded px-3 py-2"
-              value={model.nombre||''}
-              onChange={e=>setModel({...model, nombre:e.target.value})}/>
+              value={model.name||''}
+              onChange={e=>setModel({...model, name:e.target.value})}/>
           </Row>
           <div className="flex justify-end">
             <button className="px-3 py-2 border rounded" onClick={onSubmit}>Guardar</button>

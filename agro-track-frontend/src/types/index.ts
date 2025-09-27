@@ -1,76 +1,86 @@
 // Enums
 export type EmployeeStatus = 'ACTIVE' | 'INACTIVE' | 'LEAVE'
-export type CertificateType = 'FITOSANITARIOS' | 'USO_EPI' | 'MANEJO_CARRETILLA' | 'PRL_BASICO' | 'MANEJO_MAQUINARIA'
-export type WorkPartStatus = 'PENDING' | 'IN_PROGRESS' | 'DONE'
+export type CertificationType = 'FITOSANITARIOS' | 'USO_EPI' | 'MANEJO_CARRETILLA' | 'PRL_BASICO' | 'MANEJO_MAQUINARIA'
+export type WorkPartStatus = 'OPEN' | 'CLOSED'
 
 // Core entities
-export type Employee = {
-  id: string //UUID
-  nombre: string
-  apellidos: string
+export interface Employee {
+  id: string
+  name: string
+  lastname: string
   dni: string
   email: string
-  telefono: string
-  direccion: string
-  estado: EmployeeStatus
-  fechaContratacion: string // ISO
-  nombreCuadrilla: string
+  phone: string
+  address: string
+  jobTitle: string
+  status: EmployeeStatus
+  hireDate: string // ISO date yyyy-MM-dd
+
+  crewId: string
+  crewName: string
+  farmId?: string
+  farmName?: string
 }
 
-export type Certificate = {
+export interface Certificate {
   id: string
   employeeId: string
-  tipo: CertificateType
-  fechaExpiracion: string
-  empleadoNombre?: string
+  employeeName: string
+  type: CertificationType
+  expiresAt: string // ISO date
 }
 
-export type Campaign = {
+export interface Campaign {
   id: string
-  nombre: string
-  fechaInicio: string
-  fechaFin: string
-  tareaPrincipal: string
-  fincaId: string
-  fincaNombre: string
-  cuadrillaId: string
-  cuadrillaNombre: string
+  name: string
+  startDate: string
+  endDate?: string
+  mainTask: string
+
+  farmId: string
+  farmName: string
+
+  crewId: string
+  crewName: string
 }
 
-export type Farm = {
+
+export interface Farm {
   id: string
-  nombre: string
-  ubicacion: string
+  name: string
+  location: string
 }
 
-export type Parcel = {
+export interface Parcel {
   id: string
-  nombre: string
-  fincaId: string
-  fincaNombre?: string
+  name: string
+  farmId: string
+  farmName: string
 }
 
-export type WorkPart = {
+
+export interface WorkPart {
   id: string
   date: string
   task: string
   status: WorkPartStatus
   notes?: string
-  fincaId?: string
-  fincaNombre?: string
-  parcelaId?: string
-  parcelaNombre?: string
-  campañaId?: string
-  campañaNombre?: string
-  cuadrillaId?: string
-  cuadrillaNombre?: string
+
+  farmId: string
+  farmName: string
+  parcelId?: string
+  parcelName?: string
+  campaignId: string
+  campaignName: string
+  crewId: string
+  crewName: string
 }
 
-export type WorkerEntry = {
+export interface WorkerEntry {
   id: string
   workPartId: string
-  empleadoId: string
-  empleadoNombre?: string
-  horas: number
-  kilos: number
+  employeeId: string
+  employeeName: string
+  hoursWorked: number
+  quantityKg: number
 }

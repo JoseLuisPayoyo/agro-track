@@ -8,15 +8,17 @@ import ConfirmDialog from '../../components/ConfirmDialog'
 import toast from 'react-hot-toast'
 
 const empty: Partial<Employee> = {
-  nombre: '',
-  apellidos: '',
+  name: '',
+  lastname: '',
   dni: '',
   email: '',
-  telefono: '',
-  direccion: '',
-  estado: 'ACTIVE',
-  fechaContratacion: '',
-  nombreCuadrilla: ''
+  phone: '',
+  address: '',
+  jobTitle: '',
+  status: 'ACTIVE',
+  hireDate: '',
+  crewId: '',
+  farmId: ''
 }
 
 export default function EmployeesPage() {
@@ -49,8 +51,12 @@ export default function EmployeesPage() {
       if (confirm.id) await employeesService.remove(confirm.id)
       toast.success('Empleado eliminado')
       setConfirm({open:false}); load()
-    } catch { toast.error('No se pudo eliminar') }
+    } catch {
+      toast.error('No se pudo eliminar')
+    }
   }
+
+  const fmt = (d?:string) => d ? new Date(d).toLocaleDateString() : '—'
 
   return (
     <div className="space-y-4">
@@ -64,21 +70,24 @@ export default function EmployeesPage() {
         <thead>
           <tr>
             <Th>Nombre</Th><Th>Apellidos</Th><Th>DNI</Th><Th>Email</Th><Th>Teléfono</Th>
-            <Th>Dirección</Th><Th>Estado</Th><Th>Fecha contratación</Th><Th>Cuadrilla</Th><Th>Acciones</Th>
+            <Th>Dirección</Th><Th>Puesto</Th><Th>Estado</Th><Th>Contratación</Th>
+            <Th>Cuadrilla</Th><Th>Finca</Th><Th>Acciones</Th>
           </tr>
         </thead>
         <tbody>
           {data.map(emp=>(
             <tr key={emp.id}>
-              <Td>{emp.nombre}</Td>
-              <Td>{emp.apellidos}</Td>
+              <Td>{emp.name}</Td>
+              <Td>{emp.lastname}</Td>
               <Td>{emp.dni}</Td>
               <Td>{emp.email}</Td>
-              <Td>{emp.telefono}</Td>
-              <Td>{emp.direccion}</Td>
-              <Td>{emp.estado}</Td>
-              <Td>{new Date(emp.fechaContratacion).toLocaleDateString()}</Td>
-              <Td>{emp.nombreCuadrilla}</Td>
+              <Td>{emp.phone}</Td>
+              <Td>{emp.address}</Td>
+              <Td>{emp.jobTitle}</Td>
+              <Td>{emp.status}</Td>
+              <Td>{fmt(emp.hireDate)}</Td>
+              <Td>{emp.crewName}</Td>
+              <Td>{emp.farmName ?? '—'}</Td>
               <Td>
                 <div className="flex gap-2">
                   <button className="px-2 py-1 text-sm border rounded"
@@ -124,27 +133,27 @@ function EmployeeForm({ model, onChange, onSubmit }:{
   return (
     <div className="space-y-3">
       <div className="grid sm:grid-cols-2 gap-3">
-        <Row label="Nombre"><input className="border rounded px-3 py-2" value={model.nombre||''} onChange={e=>set('nombre')(e.target.value)} /></Row>
-        <Row label="Apellidos"><input className="border rounded px-3 py-2" value={model.apellidos||''} onChange={e=>set('apellidos')(e.target.value)} /></Row>
+        <Row label="Nombre"><input className="border rounded px-3 py-2" value={model.name||''} onChange={e=>set('name')(e.target.value)} /></Row>
+        <Row label="Apellidos"><input className="border rounded px-3 py-2" value={model.lastname||''} onChange={e=>set('lastname')(e.target.value)} /></Row>
         <Row label="DNI"><input className="border rounded px-3 py-2" value={model.dni||''} onChange={e=>set('dni')(e.target.value)} /></Row>
         <Row label="Email"><input className="border rounded px-3 py-2" value={model.email||''} onChange={e=>set('email')(e.target.value)} /></Row>
-        <Row label="Teléfono"><input className="border rounded px-3 py-2" value={model.telefono||''} onChange={e=>set('telefono')(e.target.value)} /></Row>
-        <Row label="Dirección"><input className="border rounded px-3 py-2" value={model.direccion||''} onChange={e=>set('direccion')(e.target.value)} /></Row>
+        <Row label="Teléfono"><input className="border rounded px-3 py-2" value={model.phone||''} onChange={e=>set('phone')(e.target.value)} /></Row>
+        <Row label="Dirección"><input className="border rounded px-3 py-2" value={model.address||''} onChange={e=>set('address')(e.target.value)} /></Row>
+        <Row label="Puesto"><input className="border rounded px-3 py-2" value={model.jobTitle||''} onChange={e=>set('jobTitle')(e.target.value)} /></Row>
         <Row label="Estado">
           <select className="border rounded px-3 py-2"
-            value={model.estado||'ACTIVE'}
-            onChange={e=>set('estado')(e.target.value as EmployeeStatus)}>
+            value={model.status||'ACTIVE'}
+            onChange={e=>set('status')(e.target.value as EmployeeStatus)}>
             <option value="ACTIVE">ACTIVE</option>
             <option value="INACTIVE">INACTIVE</option>
-            <option value="ON_LEAVE">ON_LEAVE</option>
+            <option value="LEAVE">LEAVE</option>
           </select>
         </Row>
         <Row label="Fecha contratación">
           <input type="date" className="border rounded px-3 py-2"
-            value={model.fechaContratacion?.slice(0,10) || ''}
-            onChange={e=>set('fechaContratacion')(e.target.value)} />
+            value={model.hireDate?.slice(0,10) || ''}
+            onChange={e=>set('hireDate')(e.target.value)} />
         </Row>
-        <Row label="Nombre cuadrilla"><input className="border rounded px-3 py-2" value={model.nombreCuadrilla||''} onChange={e=>set('nombreCuadrilla')(e.target.value)} /></Row>
       </div>
       <div className="flex justify-end gap-2 pt-2">
         <button className="px-3 py-2 border rounded" onClick={onSubmit}>Guardar</button>

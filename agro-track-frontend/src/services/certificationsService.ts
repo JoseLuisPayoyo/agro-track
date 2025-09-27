@@ -10,6 +10,10 @@ export const certificationsService = {
     const res = await api.get<Certificate>(`/certifications/id/${id}`)
     return res.data
   },
+  getByEmployee: async (employeeId: string): Promise<Certificate[]> => {
+    const res = await api.get<Certificate[]>(`/certifications/employee/${employeeId}`)
+    return res.data
+  },
   create: async (data: Partial<Certificate>) => api.post('/certifications', data),
   update: async (id: string, data: Partial<Certificate>) => api.put(`/certifications/${id}`, data),
   remove: async (id: string) => api.delete(`/certifications/${id}`),

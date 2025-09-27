@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { WorkerEntry, Employee } from '../../types'
+import { WorkerEntry } from '../../types'
 import { workPartEntriesService } from '../../services/workPartEntriesService'
 import { employeesService } from '../../services/employeesService'
 import { Table, Th, Td } from '../../components/Table'
@@ -8,7 +8,10 @@ import Modal from '../../components/Modal'
 import ConfirmDialog from '../../components/ConfirmDialog'
 import toast from 'react-hot-toast'
 
-const empty: Partial<WorkerEntry> = { empleadoId:'', horas:0, kilos:0 }
+const empty: Partial<WorkerEntry> = {
+  hoursWorked: 0,
+  quantityKg: 0
+}
 
 export default function WorkerEntriesPage() {
   const { workPartId } = useParams()
@@ -19,29 +22,31 @@ export default function WorkerEntriesPage() {
   const [employees, setEmployees] = useState<{value:string,label:string}[]>([])
 
   const load = () => {
-    workPartEntriesService.getAll().then(all => {
-      // filtramos en frontend porque backend no tiene endpoint específico
-      const filtered = all.filter(e => e.workPartId === workPartId)
-      setData(filtered)
-    })
+    if (workPartId) workPartEntriesService.getByWorkPart(workPartId).then(setData)
   }
 
   useEffect(()=>{
     load()
-    employeesService.getAll().then(r=>
-      setEmployees(r.map((e:Employee)=>({value:e.id,label:`${e.nombre} ${e.apellidos}`})))
+    employeesService.getAll().then(r=> 
+      setEmployees(r.map(e=>({value:e.id,label:`${e.name} ${e.lastname}`})))
     )
   }, [workPartId])
 
   const onSubmit = async () => {
     try {
-      const payload = { ...model, workPartId }
+      const payload = { 
+        ...model, 
+        workPartId,
+        employeeId: model.employeeId,
+        hoursWorked: model.hoursWorked,
+        quantityKg: model.quantityKg
+      }
       if (model.id) {
         await workPartEntriesService.update(model.id, payload)
-        toast.success('Parte trabajador actualizado')
+        toast.success('Entrada actualizada')
       } else {
         await workPartEntriesService.create(payload)
-        toast.success('Parte trabajador creado')
+        toast.success('Entrada creada')
       }
       setOpen(false); setModel(empty); load()
     } catch {
@@ -52,7 +57,7 @@ export default function WorkerEntriesPage() {
   const onDelete = async () => {
     try {
       if (confirm.id) await workPartEntriesService.remove(confirm.id)
-      toast.success('Parte trabajador eliminado')
+      toast.success('Entrada eliminada')
       setConfirm({open:false}); load()
     } catch {
       toast.error('No se pudo eliminar')
@@ -62,9 +67,9 @@ export default function WorkerEntriesPage() {
   return (
     <div className="space-y-4">
       <header className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Partes de trabajadores</h1>
+        <h1 className="text-2xl font-bold">Trabajadores en el parte</h1>
         <button className="px-3 py-2 bg-brand-600 text-white rounded-lg"
-          onClick={()=>{setModel(empty); setOpen(true)}}>Añadir parte</button>
+          onClick={()=>{setModel(empty); setOpen(true)}}>Añadir trabajador</button>
       </header>
 
       <Table>
@@ -72,17 +77,17 @@ export default function WorkerEntriesPage() {
           <tr><Th>Empleado</Th><Th>Horas</Th><Th>Kilos</Th><Th>Acciones</Th></tr>
         </thead>
         <tbody>
-          {data.map(w=>(
-            <tr key={w.id}>
-              <Td>{w.empleadoNombre ?? '—'}</Td>
-              <Td>{w.horas}</Td>
-              <Td>{w.kilos}</Td>
+          {data.map(e=>(
+            <tr key={e.id}>
+              <Td>{e.employeeName}</Td>
+              <Td>{e.hoursWorked}</Td>
+              <Td>{e.quantityKg ?? '—'}</Td>
               <Td>
                 <div className="flex gap-2">
                   <button className="px-2 py-1 text-sm border rounded"
-                    onClick={()=>{setModel(w); setOpen(true)}}>Editar</button>
+                    onClick={()=>{setModel(e); setOpen(true)}}>Editar</button>
                   <button className="px-2 py-1 text-sm border rounded text-red-700"
-                    onClick={()=>setConfirm({open:true, id:w.id})}>Eliminar</button>
+                    onClick={()=>setConfirm({open:true, id:e.id})}>Eliminar</button>
                 </div>
               </Td>
             </tr>
@@ -90,25 +95,25 @@ export default function WorkerEntriesPage() {
         </tbody>
       </Table>
 
-      <Modal open={open} title={model.id ? 'Editar parte trabajador' : 'Añadir parte trabajador'} onClose={()=>setOpen(false)}>
+      <Modal open={open} title={model.id ? 'Editar entrada' : 'Añadir entrada'} onClose={()=>setOpen(false)}>
         <div className="space-y-3">
           <Row label="Empleado">
             <select className="border rounded px-3 py-2"
-              value={model.empleadoId||''}
-              onChange={e=>setModel({...model, empleadoId:e.target.value})}>
+              value={model.employeeId||''}
+              onChange={e=>setModel({...model, employeeId:e.target.value})}>
               <option value="">Selecciona</option>
-              {employees.map(e=><option key={e.value} value={e.value}>{e.label}</option>)}
+              {employees.map(emp=><option key={emp.value} value={emp.value}>{emp.label}</option>)}
             </select>
           </Row>
-          <Row label="Horas">
+          <Row label="Horas trabajadas">
             <input type="number" step="0.1" className="border rounded px-3 py-2"
-              value={model.horas ?? 0}
-              onChange={e=>setModel({...model, horas: Number(e.target.value)})}/>
+              value={model.hoursWorked||0}
+              onChange={e=>setModel({...model, hoursWorked:Number(e.target.value)})}/>
           </Row>
-          <Row label="Kilos">
+          <Row label="Cantidad (Kg)">
             <input type="number" step="0.1" className="border rounded px-3 py-2"
-              value={model.kilos ?? 0}
-              onChange={e=>setModel({...model, kilos: Number(e.target.value)})}/>
+              value={model.quantityKg||0}
+              onChange={e=>setModel({...model, quantityKg:Number(e.target.value)})}/>
           </Row>
           <div className="flex justify-end">
             <button className="px-3 py-2 border rounded" onClick={onSubmit}>Guardar</button>
@@ -117,7 +122,7 @@ export default function WorkerEntriesPage() {
       </Modal>
 
       <ConfirmDialog open={confirm.open} onCancel={()=>setConfirm({open:false})} onConfirm={onDelete}
-        title="Eliminar registro" message="Esta acción no se puede deshacer." />
+        title="Eliminar entrada" message="Esta acción no se puede deshacer." />
     </div>
   )
 }

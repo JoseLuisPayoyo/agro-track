@@ -1,25 +1,25 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { WorkPart, Farm, Parcel, Campaign } from '../../types'
+import { WorkPart, WorkPartStatus } from '../../types'
 import { workPartsService } from '../../services/workPartsService'
 import { farmsService } from '../../services/farmsService'
 import { parcelsService } from '../../services/parcelsService'
 import { campaignsService } from '../../services/campaignsService'
-import { crewsService, Crew } from '../../services/crewsService'
+import { crewsService } from '../../services/crewsService'
 import { Table, Th, Td } from '../../components/Table'
 import Modal from '../../components/Modal'
 import ConfirmDialog from '../../components/ConfirmDialog'
+import { Link } from 'react-router-dom'
 import toast from 'react-hot-toast'
 
 const empty: Partial<WorkPart> = {
   date: '',
   task: '',
-  status: 'PENDING',
+  status: 'OPEN',
   notes: '',
-  fincaId: '',
-  parcelaId: '',
-  campañaId: '',
-  cuadrillaId: ''
+  farmId: '',
+  parcelId: '',
+  campaignId: '',
+  crewId: ''
 }
 
 export default function WorkPartsPage() {
@@ -37,20 +37,20 @@ export default function WorkPartsPage() {
 
   useEffect(()=>{
     load()
-    farmsService.getAll().then(r=> setFarms(r.map((f:Farm)=>({value:f.id,label:f.nombre}))))
-    parcelsService.getAll().then(r=> setParcels(r.map((p:Parcel)=>({value:p.id,label:p.nombre}))))
-    campaignsService.getAll().then(r=> setCampaigns(r.map((c:Campaign)=>({value:c.id,label:c.nombre}))))
-    crewsService.getAll().then(r=> setCrews(r.map((c:Crew)=>({value:c.id,label:c.nombre}))))
+    farmsService.getAll().then(r=> setFarms(r.map(f=>({value:f.id,label:f.name}))))
+    parcelsService.getAll().then(r=> setParcels(r.map(p=>({value:p.id,label:p.name}))))
+    campaignsService.getAll().then(r=> setCampaigns(r.map(c=>({value:c.id,label:c.name}))))
+    crewsService.getAll().then(r=> setCrews(r.map(c=>({value:c.id,label:c.nombre}))))
   }, [])
 
   const onSubmit = async () => {
     try {
       if (model.id) {
         await workPartsService.update(model.id, model)
-        toast.success('Parte actualizado')
+        toast.success('Parte de trabajo actualizado')
       } else {
         await workPartsService.create(model)
-        toast.success('Parte creado')
+        toast.success('Parte de trabajo creado')
       }
       setOpen(false); setModel(empty); load()
     } catch {
@@ -61,7 +61,7 @@ export default function WorkPartsPage() {
   const onDelete = async () => {
     try {
       if (confirm.id) await workPartsService.remove(confirm.id)
-      toast.success('Parte eliminado')
+      toast.success('Parte de trabajo eliminado')
       setConfirm({open:false}); load()
     } catch {
       toast.error('No se pudo eliminar')
@@ -86,24 +86,24 @@ export default function WorkPartsPage() {
           </tr>
         </thead>
         <tbody>
-          {data.map(w=>(
-            <tr key={w.id}>
-              <Td>{fmt(w.date)}</Td>
-              <Td>{w.task}</Td>
-              <Td>{w.status}</Td>
-              <Td>{w.notes ?? '—'}</Td>
-              <Td>{w.fincaNombre ?? '—'}</Td>
-              <Td>{w.parcelaNombre ?? '—'}</Td>
-              <Td>{w.campañaNombre ?? '—'}</Td>
-              <Td>{w.cuadrillaNombre ?? '—'}</Td>
+          {data.map(p=>(
+            <tr key={p.id}>
+              <Td>{fmt(p.date)}</Td>
+              <Td>{p.task}</Td>
+              <Td>{p.status}</Td>
+              <Td>{p.notes}</Td>
+              <Td>{p.farmName}</Td>
+              <Td>{p.parcelName ?? '—'}</Td>
+              <Td>{p.campaignName}</Td>
+              <Td>{p.crewName}</Td>
               <Td>
                 <div className="flex gap-2">
                   <button className="px-2 py-1 text-sm border rounded"
-                    onClick={()=>{setModel(w); setOpen(true)}}>Editar</button>
+                    onClick={()=>{setModel(p); setOpen(true)}}>Editar</button>
                   <button className="px-2 py-1 text-sm border rounded text-red-700"
-                    onClick={()=>setConfirm({open:true, id:w.id})}>Eliminar</button>
+                    onClick={()=>setConfirm({open:true, id:p.id})}>Eliminar</button>
                   <Link className="px-2 py-1 text-sm border rounded"
-                    to={`/partes/${w.id}/trabajadores`}>Ver partes</Link>
+                    to={`/partes/${p.id}/entradas`}>Ver trabajadores</Link>
                 </div>
               </Td>
             </tr>
@@ -125,52 +125,49 @@ export default function WorkPartsPage() {
           </Row>
           <Row label="Estado">
             <select className="border rounded px-3 py-2"
-              value={model.status||'PENDING'}
-              onChange={e=>setModel({...model, status: e.target.value as WorkPart['status']})}>
-              <option value="PENDING">PENDING</option>
-              <option value="IN_PROGRESS">IN_PROGRESS</option>
-              <option value="DONE">DONE</option>
+              value={model.status||'OPEN'}
+              onChange={e=>setModel({...model, status:e.target.value as WorkPartStatus})}>
+              <option value="OPEN">OPEN</option>
+              <option value="CLOSED">CLOSED</option>
             </select>
           </Row>
           <Row label="Notas">
-            <textarea className="border rounded px-3 py-2"
+            <input className="border rounded px-3 py-2"
               value={model.notes||''}
               onChange={e=>setModel({...model, notes:e.target.value})}/>
           </Row>
-          <div className="grid sm:grid-cols-2 gap-3">
-            <Row label="Finca">
-              <select className="border rounded px-3 py-2"
-                value={model.fincaId||''}
-                onChange={e=>setModel({...model, fincaId:e.target.value})}>
-                <option value="">—</option>
-                {farms.map(f=><option key={f.value} value={f.value}>{f.label}</option>)}
-              </select>
-            </Row>
-            <Row label="Parcela">
-              <select className="border rounded px-3 py-2"
-                value={model.parcelaId||''}
-                onChange={e=>setModel({...model, parcelaId:e.target.value})}>
-                <option value="">—</option>
-                {parcels.map(p=><option key={p.value} value={p.value}>{p.label}</option>)}
-              </select>
-            </Row>
-            <Row label="Campaña">
-              <select className="border rounded px-3 py-2"
-                value={model.campañaId||''}
-                onChange={e=>setModel({...model, campañaId:e.target.value})}>
-                <option value="">—</option>
-                {campaigns.map(c=><option key={c.value} value={c.value}>{c.label}</option>)}
-              </select>
-            </Row>
-            <Row label="Cuadrilla">
-              <select className="border rounded px-3 py-2"
-                value={model.cuadrillaId||''}
-                onChange={e=>setModel({...model, cuadrillaId:e.target.value})}>
-                <option value="">—</option>
-                {crews.map(q=><option key={q.value} value={q.value}>{q.label}</option>)}
-              </select>
-            </Row>
-          </div>
+          <Row label="Finca">
+            <select className="border rounded px-3 py-2"
+              value={model.farmId||''}
+              onChange={e=>setModel({...model, farmId:e.target.value})}>
+              <option value="">Selecciona</option>
+              {farms.map(f=><option key={f.value} value={f.value}>{f.label}</option>)}
+            </select>
+          </Row>
+          <Row label="Parcela">
+            <select className="border rounded px-3 py-2"
+              value={model.parcelId||''}
+              onChange={e=>setModel({...model, parcelId:e.target.value})}>
+              <option value="">Ninguna</option>
+              {parcels.map(p=><option key={p.value} value={p.value}>{p.label}</option>)}
+            </select>
+          </Row>
+          <Row label="Campaña">
+            <select className="border rounded px-3 py-2"
+              value={model.campaignId||''}
+              onChange={e=>setModel({...model, campaignId:e.target.value})}>
+              <option value="">Selecciona</option>
+              {campaigns.map(c=><option key={c.value} value={c.value}>{c.label}</option>)}
+            </select>
+          </Row>
+          <Row label="Cuadrilla">
+            <select className="border rounded px-3 py-2"
+              value={model.crewId||''}
+              onChange={e=>setModel({...model, crewId:e.target.value})}>
+              <option value="">Selecciona</option>
+              {crews.map(c=><option key={c.value} value={c.value}>{c.label}</option>)}
+            </select>
+          </Row>
           <div className="flex justify-end">
             <button className="px-3 py-2 border rounded" onClick={onSubmit}>Guardar</button>
           </div>

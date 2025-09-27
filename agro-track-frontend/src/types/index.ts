@@ -57,6 +57,13 @@ export interface Parcel {
   farmId: string
   farmName: string
 }
+export interface Crew {
+  id: string
+  name: string
+  foremanId: string
+  foremanName: string
+}
+
 
 
 export interface WorkPart {

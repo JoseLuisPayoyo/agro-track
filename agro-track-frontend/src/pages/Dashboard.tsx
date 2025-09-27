@@ -1,36 +1,54 @@
 import { useEffect, useState } from 'react'
 import { api } from '../lib/api'
 
+type Stats = {
+  empleados: number
+  campañas: number
+  fincas: number
+  partes: number
+  cuadrillas: number
+}
+
 export default function Dashboard() {
-  const [stats, setStats] = useState<{empleados:number; campañas:number; fincas:number; partes:number}>()
+  const [stats, setStats] = useState<Stats>({
+    empleados: 0,
+    campañas: 0,
+    fincas: 0,
+    partes: 0,
+    cuadrillas: 0
+  })
 
   useEffect(() => {
-    // Ajusta a tus endpoints de conteo si los tienes; si no, se hace fetch y length
     Promise.all([
-      api.get('/employees'),        // GET lista empleados
+      api.get('/employees'),   // GET lista empleados
       api.get('/campaigns'),
       api.get('/farms'),
-      api.get('/workparts'),
-    ]).then(([e,c,f,p])=>{
+      api.get('/work-parts'),
+      api.get('/crews')
+    ]).then(([e,c,f,p,q])=>{
       setStats({
         empleados: e.data.length ?? 0,
         campañas: c.data.length ?? 0,
         fincas: f.data.length ?? 0,
-        partes: p.data.length ?? 0
+        partes: p.data.length ?? 0,
+        cuadrillas: q.data.length ?? 0
       })
-    }).catch(()=>setStats({empleados:0,campañas:0,fincas:0,partes:0}))
+    }).catch(()=>{
+      setStats({empleados:0,campañas:0,fincas:0,partes:0,cuadrillas:0})
+    })
   }, [])
 
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold">Inicio</h1>
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Stat title="Empleados" value={stats?.empleados ?? '—'} />
-        <Stat title="Campañas" value={stats?.campañas ?? '—'} />
-        <Stat title="Fincas" value={stats?.fincas ?? '—'} />
-        <Stat title="Partes de trabajo" value={stats?.partes ?? '—'} />
+      <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        <Stat title="Empleados" value={stats.empleados} />
+        <Stat title="Campañas" value={stats.campañas} />
+        <Stat title="Fincas" value={stats.fincas} />
+        <Stat title="Partes de trabajo" value={stats.partes} />
+        <Stat title="Cuadrillas" value={stats.cuadrillas} />
       </div>
-      {/* Aquí puedes añadir listados resumidos recientes */}
+      {/* Aquí podrías meter listados recientes (últimos empleados, partes, etc.) */}
     </div>
   )
 }

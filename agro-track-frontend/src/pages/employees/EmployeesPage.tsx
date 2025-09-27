@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Employee, EmployeeStatus } from '../../types'
-import { api } from '../../lib/api'
+import { employeesService } from '../../services/employeesService'
 import { Link } from 'react-router-dom'
 import { Table, Th, Td } from '../../components/Table'
 import Modal from '../../components/Modal'
@@ -8,8 +8,15 @@ import ConfirmDialog from '../../components/ConfirmDialog'
 import toast from 'react-hot-toast'
 
 const empty: Partial<Employee> = {
-  nombre: '', apellidos:'', dni:'', email:'', telefono:'', direccion:'',
-  estado: 'ACTIVE', fechaContratacion:'', nombreCuadrilla:''
+  nombre: '',
+  apellidos: '',
+  dni: '',
+  email: '',
+  telefono: '',
+  direccion: '',
+  estado: 'ACTIVE',
+  fechaContratacion: '',
+  nombreCuadrilla: ''
 }
 
 export default function EmployeesPage() {
@@ -18,29 +25,28 @@ export default function EmployeesPage() {
   const [model, setModel] = useState<Partial<Employee>>(empty)
   const [confirm, setConfirm] = useState<{open:boolean; id?:string}>({open:false})
 
-  const load = () => api.get('/employees').then(r=> setData(r.data))
+  const load = () => employeesService.getAll().then(setData)
 
   useEffect(()=>{ load() }, [])
 
   const onSubmit = async () => {
     try {
       if (model.id) {
-        await api.put(`/employees/${model.id}`, model)
+        await employeesService.update(model.id, model)
         toast.success('Empleado actualizado')
       } else {
-        await api.post('/employees', model)
+        await employeesService.create(model)
         toast.success('Empleado creado')
       }
       setOpen(false); setModel(empty); load()
-    } catch (e) { 
-      if (e instanceof Error) toast.error(e.message)
-      else toast.error('Error desconocido') 
+    } catch {
+      toast.error('Error al guardar')
     }
   }
 
   const onDelete = async () => {
     try {
-      await api.delete(`/employees/${confirm.id}`)
+      if (confirm.id) await employeesService.remove(confirm.id)
       toast.success('Empleado eliminado')
       setConfirm({open:false}); load()
     } catch { toast.error('No se pudo eliminar') }
@@ -50,7 +56,8 @@ export default function EmployeesPage() {
     <div className="space-y-4">
       <header className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Empleados</h1>
-        <button className="px-3 py-2 bg-brand-600 text-white rounded-lg" onClick={()=>{setModel(empty); setOpen(true)}}>Añadir empleado</button>
+        <button className="px-3 py-2 bg-brand-600 text-white rounded-lg"
+          onClick={()=>{setModel(empty); setOpen(true)}}>Añadir empleado</button>
       </header>
 
       <Table>
@@ -69,14 +76,17 @@ export default function EmployeesPage() {
               <Td>{emp.email}</Td>
               <Td>{emp.telefono}</Td>
               <Td>{emp.direccion}</Td>
-              <Td><span className="px-2 py-1 text-xs rounded bg-gray-100">{emp.estado}</span></Td>
+              <Td>{emp.estado}</Td>
               <Td>{new Date(emp.fechaContratacion).toLocaleDateString()}</Td>
               <Td>{emp.nombreCuadrilla}</Td>
               <Td>
                 <div className="flex gap-2">
-                  <button className="px-2 py-1 text-sm border rounded" onClick={()=>{setModel(emp); setOpen(true)}}>Editar</button>
-                  <button className="px-2 py-1 text-sm border rounded text-red-700" onClick={()=>setConfirm({open:true, id:emp.id})}>Eliminar</button>
-                  <Link className="px-2 py-1 text-sm border rounded" to={`/empleados/${emp.id}/certificados`}>Ver certificados</Link>
+                  <button className="px-2 py-1 text-sm border rounded"
+                    onClick={()=>{setModel(emp); setOpen(true)}}>Editar</button>
+                  <button className="px-2 py-1 text-sm border rounded text-red-700"
+                    onClick={()=>setConfirm({open:true, id:emp.id})}>Eliminar</button>
+                  <Link className="px-2 py-1 text-sm border rounded"
+                    to={`/empleados/${emp.id}/certificados`}>Ver certificados</Link>
                 </div>
               </Td>
             </tr>
@@ -111,7 +121,6 @@ function EmployeeForm({ model, onChange, onSubmit }:{
   const set = <K extends keyof Employee>(k: K) => (v: Employee[K]) => {
     onChange({ ...model, [k]: v })
   }
-
   return (
     <div className="space-y-3">
       <div className="grid sm:grid-cols-2 gap-3">
@@ -122,14 +131,18 @@ function EmployeeForm({ model, onChange, onSubmit }:{
         <Row label="Teléfono"><input className="border rounded px-3 py-2" value={model.telefono||''} onChange={e=>set('telefono')(e.target.value)} /></Row>
         <Row label="Dirección"><input className="border rounded px-3 py-2" value={model.direccion||''} onChange={e=>set('direccion')(e.target.value)} /></Row>
         <Row label="Estado">
-          <select className="border rounded px-3 py-2" value={model.estado||'ACTIVE'} onChange={e=>set('estado')(e.target.value as EmployeeStatus)}>
+          <select className="border rounded px-3 py-2"
+            value={model.estado||'ACTIVE'}
+            onChange={e=>set('estado')(e.target.value as EmployeeStatus)}>
             <option value="ACTIVE">ACTIVE</option>
             <option value="INACTIVE">INACTIVE</option>
-            <option value="ON_LEAVE">LEAVE</option>
+            <option value="ON_LEAVE">ON_LEAVE</option>
           </select>
         </Row>
         <Row label="Fecha contratación">
-          <input type="date" className="border rounded px-3 py-2" value={model.fechaContratacion?.slice(0,10) || ''} onChange={e=>set('fechaContratacion')(e.target.value)} />
+          <input type="date" className="border rounded px-3 py-2"
+            value={model.fechaContratacion?.slice(0,10) || ''}
+            onChange={e=>set('fechaContratacion')(e.target.value)} />
         </Row>
         <Row label="Nombre cuadrilla"><input className="border rounded px-3 py-2" value={model.nombreCuadrilla||''} onChange={e=>set('nombreCuadrilla')(e.target.value)} /></Row>
       </div>

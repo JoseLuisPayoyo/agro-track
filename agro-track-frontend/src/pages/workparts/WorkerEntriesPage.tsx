@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { WorkerEntry, Employee } from '../../types'
-import { api } from '../../lib/api'
+import { workPartEntriesService } from '../../services/workPartEntriesService'
+import { employeesService } from '../../services/employeesService'
 import { Table, Th, Td } from '../../components/Table'
 import Modal from '../../components/Modal'
 import ConfirmDialog from '../../components/ConfirmDialog'
@@ -17,30 +18,53 @@ export default function WorkerEntriesPage() {
   const [confirm, setConfirm] = useState<{open:boolean; id?:string}>({open:false})
   const [employees, setEmployees] = useState<{value:string,label:string}[]>([])
 
-  const load = () => api.get(`/workparts/${workPartId}/entries`).then(r=> setData(r.data))
+  const load = () => {
+    workPartEntriesService.getAll().then(all => {
+      // filtramos en frontend porque backend no tiene endpoint específico
+      const filtered = all.filter(e => e.workPartId === workPartId)
+      setData(filtered)
+    })
+  }
+
   useEffect(()=>{
     load()
-    api.get('/employees').then(r=> setEmployees(r.data.map((e:Employee)=>({value:e.id,label:`${e.nombre} ${e.apellidos}`}))))
+    employeesService.getAll().then(r=>
+      setEmployees(r.map((e:Employee)=>({value:e.id,label:`${e.nombre} ${e.apellidos}`})))
+    )
   }, [workPartId])
 
   const onSubmit = async () => {
     try {
       const payload = { ...model, workPartId }
-      if (model.id) { await api.put(`/entries/${model.id}`, payload); toast.success('Parte trabajador actualizado') }
-      else { await api.post(`/workparts/${workPartId}/entries`, payload); toast.success('Parte trabajador creado') }
+      if (model.id) {
+        await workPartEntriesService.update(model.id, payload)
+        toast.success('Parte trabajador actualizado')
+      } else {
+        await workPartEntriesService.create(payload)
+        toast.success('Parte trabajador creado')
+      }
       setOpen(false); setModel(empty); load()
-    } catch { toast.error('Error al guardar') }
+    } catch {
+      toast.error('Error al guardar')
+    }
   }
+
   const onDelete = async () => {
-    try { await api.delete(`/entries/${confirm.id}`); toast.success('Parte trabajador eliminado'); setConfirm({open:false}); load() }
-    catch { toast.error('No se pudo eliminar') }
+    try {
+      if (confirm.id) await workPartEntriesService.remove(confirm.id)
+      toast.success('Parte trabajador eliminado')
+      setConfirm({open:false}); load()
+    } catch {
+      toast.error('No se pudo eliminar')
+    }
   }
 
   return (
     <div className="space-y-4">
       <header className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Partes de trabajadores</h1>
-        <button className="px-3 py-2 bg-brand-600 text-white rounded-lg" onClick={()=>{setModel(empty); setOpen(true)}}>Añadir parte</button>
+        <button className="px-3 py-2 bg-brand-600 text-white rounded-lg"
+          onClick={()=>{setModel(empty); setOpen(true)}}>Añadir parte</button>
       </header>
 
       <Table>
@@ -55,8 +79,10 @@ export default function WorkerEntriesPage() {
               <Td>{w.kilos}</Td>
               <Td>
                 <div className="flex gap-2">
-                  <button className="px-2 py-1 text-sm border rounded" onClick={()=>{setModel(w); setOpen(true)}}>Editar</button>
-                  <button className="px-2 py-1 text-sm border rounded text-red-700" onClick={()=>setConfirm({open:true, id:w.id})}>Eliminar</button>
+                  <button className="px-2 py-1 text-sm border rounded"
+                    onClick={()=>{setModel(w); setOpen(true)}}>Editar</button>
+                  <button className="px-2 py-1 text-sm border rounded text-red-700"
+                    onClick={()=>setConfirm({open:true, id:w.id})}>Eliminar</button>
                 </div>
               </Td>
             </tr>
@@ -67,14 +93,26 @@ export default function WorkerEntriesPage() {
       <Modal open={open} title={model.id ? 'Editar parte trabajador' : 'Añadir parte trabajador'} onClose={()=>setOpen(false)}>
         <div className="space-y-3">
           <Row label="Empleado">
-            <select className="border rounded px-3 py-2" value={model.empleadoId||''} onChange={e=>setModel({...model, empleadoId:e.target.value})}>
+            <select className="border rounded px-3 py-2"
+              value={model.empleadoId||''}
+              onChange={e=>setModel({...model, empleadoId:e.target.value})}>
               <option value="">Selecciona</option>
               {employees.map(e=><option key={e.value} value={e.value}>{e.label}</option>)}
             </select>
           </Row>
-          <Row label="Horas"><input type="number" step="0.1" className="border rounded px-3 py-2" value={model.horas ?? 0} onChange={e=>setModel({...model, horas: Number(e.target.value)})}/></Row>
-          <Row label="Kilos"><input type="number" step="0.1" className="border rounded px-3 py-2" value={model.kilos ?? 0} onChange={e=>setModel({...model, kilos: Number(e.target.value)})}/></Row>
-          <div className="flex justify-end"><button className="px-3 py-2 border rounded" onClick={onSubmit}>Guardar</button></div>
+          <Row label="Horas">
+            <input type="number" step="0.1" className="border rounded px-3 py-2"
+              value={model.horas ?? 0}
+              onChange={e=>setModel({...model, horas: Number(e.target.value)})}/>
+          </Row>
+          <Row label="Kilos">
+            <input type="number" step="0.1" className="border rounded px-3 py-2"
+              value={model.kilos ?? 0}
+              onChange={e=>setModel({...model, kilos: Number(e.target.value)})}/>
+          </Row>
+          <div className="flex justify-end">
+            <button className="px-3 py-2 border rounded" onClick={onSubmit}>Guardar</button>
+          </div>
         </div>
       </Modal>
 
@@ -85,5 +123,10 @@ export default function WorkerEntriesPage() {
 }
 
 function Row({label, children}:{label:string; children:React.ReactNode}) {
-  return <label className="grid sm:grid-cols-[180px_1fr] gap-3 items-center"><span className="text-sm text-gray-600">{label}</span>{children}</label>
+  return (
+    <label className="grid sm:grid-cols-[180px_1fr] gap-3 items-center">
+      <span className="text-sm text-gray-600">{label}</span>
+      {children}
+    </label>
+  )
 }

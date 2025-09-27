@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Farm } from '../../types'
-import { api } from '../../lib/api'
+import { farmsService } from '../../services/farmsService'
 import { Table, Th, Td } from '../../components/Table'
 import Modal from '../../components/Modal'
 import ConfirmDialog from '../../components/ConfirmDialog'
@@ -15,26 +15,40 @@ export default function FarmsPage() {
   const [model, setModel] = useState<Partial<Farm>>(empty)
   const [confirm, setConfirm] = useState<{open:boolean; id?:string}>({open:false})
 
-  const load = () => api.get('/farms').then(r=> setData(r.data))
+  const load = () => farmsService.getAll().then(setData)
   useEffect(()=>{ load() }, [])
 
   const onSubmit = async () => {
     try {
-      if (model.id) { await api.put(`/farms/${model.id}`, model); toast.success('Finca actualizada') }
-      else { await api.post('/farms', model); toast.success('Finca creada') }
+      if (model.id) {
+        await farmsService.update(model.id, model)
+        toast.success('Finca actualizada')
+      } else {
+        await farmsService.create(model)
+        toast.success('Finca creada')
+      }
       setOpen(false); setModel(empty); load()
-    } catch { toast.error('Error al guardar') }
+    } catch {
+      toast.error('Error al guardar')
+    }
   }
+
   const onDelete = async () => {
-    try { await api.delete(`/farms/${confirm.id}`); toast.success('Finca eliminada'); setConfirm({open:false}); load() }
-    catch { toast.error('No se pudo eliminar') }
+    try {
+      if (confirm.id) await farmsService.remove(confirm.id)
+      toast.success('Finca eliminada')
+      setConfirm({open:false}); load()
+    } catch {
+      toast.error('No se pudo eliminar')
+    }
   }
 
   return (
     <div className="space-y-4">
       <header className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Fincas</h1>
-        <button className="px-3 py-2 bg-brand-600 text-white rounded-lg" onClick={()=>{setModel(empty); setOpen(true)}}>Añadir finca</button>
+        <button className="px-3 py-2 bg-brand-600 text-white rounded-lg"
+          onClick={()=>{setModel(empty); setOpen(true)}}>Añadir finca</button>
       </header>
 
       <Table>
@@ -48,9 +62,12 @@ export default function FarmsPage() {
               <Td>{f.ubicacion}</Td>
               <Td>
                 <div className="flex gap-2">
-                  <button className="px-2 py-1 text-sm border rounded" onClick={()=>{setModel(f); setOpen(true)}}>Editar</button>
-                  <button className="px-2 py-1 text-sm border rounded text-red-700" onClick={()=>setConfirm({open:true, id:f.id})}>Eliminar</button>
-                  <Link className="px-2 py-1 text-sm border rounded" to={`/fincas/${f.id}/parcelas`}>Ver parcelas</Link>
+                  <button className="px-2 py-1 text-sm border rounded"
+                    onClick={()=>{setModel(f); setOpen(true)}}>Editar</button>
+                  <button className="px-2 py-1 text-sm border rounded text-red-700"
+                    onClick={()=>setConfirm({open:true, id:f.id})}>Eliminar</button>
+                  <Link className="px-2 py-1 text-sm border rounded"
+                    to={`/fincas/${f.id}/parcelas`}>Ver parcelas</Link>
                 </div>
               </Td>
             </tr>
@@ -60,9 +77,19 @@ export default function FarmsPage() {
 
       <Modal open={open} title={model.id ? 'Editar finca' : 'Añadir finca'} onClose={()=>setOpen(false)}>
         <div className="space-y-3">
-          <Row label="Nombre"><input className="border rounded px-3 py-2" value={model.nombre||''} onChange={e=>setModel({...model, nombre:e.target.value})}/></Row>
-          <Row label="Ubicación"><input className="border rounded px-3 py-2" value={model.ubicacion||''} onChange={e=>setModel({...model, ubicacion:e.target.value})}/></Row>
-          <div className="flex justify-end"><button className="px-3 py-2 border rounded" onClick={onSubmit}>Guardar</button></div>
+          <Row label="Nombre">
+            <input className="border rounded px-3 py-2"
+              value={model.nombre||''}
+              onChange={e=>setModel({...model, nombre:e.target.value})}/>
+          </Row>
+          <Row label="Ubicación">
+            <input className="border rounded px-3 py-2"
+              value={model.ubicacion||''}
+              onChange={e=>setModel({...model, ubicacion:e.target.value})}/>
+          </Row>
+          <div className="flex justify-end">
+            <button className="px-3 py-2 border rounded" onClick={onSubmit}>Guardar</button>
+          </div>
         </div>
       </Modal>
 
@@ -73,5 +100,10 @@ export default function FarmsPage() {
 }
 
 function Row({label, children}:{label:string; children:React.ReactNode}) {
-  return <label className="grid sm:grid-cols-[180px_1fr] gap-3 items-center"><span className="text-sm text-gray-600">{label}</span>{children}</label>
+  return (
+    <label className="grid sm:grid-cols-[180px_1fr] gap-3 items-center">
+      <span className="text-sm text-gray-600">{label}</span>
+      {children}
+    </label>
+  )
 }

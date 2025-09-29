@@ -12,7 +12,7 @@ export type WorkPartStatus = 'OPEN' | 'CLOSED'
 export interface Employee {
   id: string
   name: string
-  lastName: string
+  lastname: string
   dni: string
   email: string
   phone: string

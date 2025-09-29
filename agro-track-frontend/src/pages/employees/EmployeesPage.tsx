@@ -11,7 +11,7 @@ import { Link } from 'react-router-dom'
 
 const empty: Partial<Employee> = {
   name: '',
-  lastName: '',
+  lastname: '',
   dni: '',
   email: '',
   phone: '',
@@ -43,7 +43,7 @@ export default function EmployeesPage() {
     try {
       const payload = {
         name: model.name!,
-        lastName: model.lastName!,   
+        lastName: model.lastname!,   
         dni: model.dni!,
         email: model.email,
         phone: model.phone,
@@ -110,7 +110,7 @@ export default function EmployeesPage() {
           {data.map(e => (
             <tr key={e.id}>
               <Td>{e.name}</Td>
-              <Td>{e.lastName}</Td>
+              <Td>{e.lastname}</Td>
               <Td>{e.dni}</Td>
               <Td>{e.email}</Td>
               <Td>{e.phone}</Td>
@@ -163,8 +163,8 @@ export default function EmployeesPage() {
           <Row label="Apellidos">
             <input
               className="border rounded px-3 py-2"
-              value={model.lastName || ''}
-              onChange={e => setModel({ ...model, lastName: e.target.value })}
+              value={model.lastname || ''}
+              onChange={e => setModel({ ...model, lastname: e.target.value })}
             />
           </Row>
           <Row label="DNI">

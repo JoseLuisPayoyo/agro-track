@@ -23,7 +23,7 @@ export default function CrewsPage() {
     employeesService.getAll().then(r =>
       setEmployees(r.map(e => ({
         value: e.id,
-        label: `${e.name} ${e.lastName}` 
+        label: `${e.name} ${e.lastname}` 
       })))
     )
   }, [])

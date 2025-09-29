@@ -83,7 +83,7 @@ npm run dev
 
 Proyecto desarrollado por **José Luis Rodríguez (Payoyo)**.  
 📌 Estudiante de **DAM**, apasionado por el backend con **Java + Spring Boot** y con interés en **cloud, blockchain y sistemas distribuidos**. 
-<p align="center"> <img src="./assets/logo_blanco.png" alt="Logo Payoyo" width="250" /> </p>
+<p align="center"> <img src="./assets/logo_payoyovg.svg" alt="Logo Payoyo" width="250" /> </p>
 
 
 

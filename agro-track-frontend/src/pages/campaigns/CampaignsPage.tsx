@@ -29,8 +29,8 @@ export default function CampaignsPage() {
 
   useEffect(()=>{
     load()
-    farmsService.getAll().then(r=> setFarms(r.map(f=>({value:f.id,label:f.nombre}))))
-    crewsService.getAll().then(r=> setCrews(r.map((c:Crew)=>({value:c.id,label:c.nombre}))))
+    farmsService.getAll().then(r=> setFarms(r.map(f=>({value:f.id,label:f.name}))))
+    crewsService.getAll().then(r=> setCrews(r.map((c:Crew)=>({value:c.id,label:c.name}))))
   }, [])
 
   const onSubmit = async () => {

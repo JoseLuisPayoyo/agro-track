@@ -25,6 +25,9 @@ Proyecto desarrollado con **Spring Boot (backend)** y **React + Tailwind (fronte
 
 
 ---
+
+## 📸 Capturas de pantalla
+
 ![Dashboard](./assets/dashboard.png)
 ![Empleados](./assets/empleados.png)
 ![Campañas](./assets/campanias.png)
@@ -62,12 +65,6 @@ Proyecto desarrollado con **Spring Boot (backend)** y **React + Tailwind (fronte
 - **Dashboard inicial**  
   - Resumen de métricas: nº empleados, campañas, fincas, cuadrillas y partes  
   - Gráfico con estadísticas del estado de los empleados  
-
----
-
-## 📸 Capturas de pantalla
-
-*(Incluye aquí 3-4 imágenes del dashboard, empleados, campañas y partes de trabajo con tus datos de ejemplo)*  
 
 ---
 

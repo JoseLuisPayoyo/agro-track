@@ -8,7 +8,7 @@ import { crewsService } from '../../services/crewsService'
 import { Table, Th, Td } from '../../components/Table'
 import Modal from '../../components/Modal'
 import ConfirmDialog from '../../components/ConfirmDialog'
-import { Link } from 'react-router-dom'
+//import { Link } from 'react-router-dom'
 import toast from 'react-hot-toast'
 
 const empty: Partial<WorkPart> = {
@@ -102,8 +102,8 @@ export default function WorkPartsPage() {
                     onClick={()=>{setModel(p); setOpen(true)}}>Editar</button>
                   <button className="px-2 py-1 text-sm border rounded text-red-700"
                     onClick={()=>setConfirm({open:true, id:p.id})}>Eliminar</button>
-                  <Link className="px-2 py-1 text-sm border rounded"
-                    to={`/partes/${p.id}/entradas`}>Ver trabajadores</Link>
+                  {/* <Link className="px-2 py-1 text-sm border rounded"
+                    to={`/partes/${p.id}/entradas`}>Ver trabajadores</Link> */}
                 </div>
               </Td>
             </tr>

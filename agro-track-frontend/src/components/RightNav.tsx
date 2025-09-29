@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom'
 const links = [
   { to: '/', label: 'Inicio' },
   { to: '/empleados', label: 'Empleados' },
-  { to: '/campañas', label: 'Campañas' },
+  { to: '/campanas', label: 'Campañas' },
   { to: '/fincas', label: 'Fincas' },
   { to: '/cuadrillas', label: 'Cuadrillas' },
   { to: '/partes', label: 'Partes de trabajo' },

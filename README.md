@@ -2,7 +2,6 @@
 
 **AgroTrack** es una aplicación **fullstack** para la gestión agrícola.  
 Permite administrar empleados, cuadrillas, campañas, fincas, parcelas, certificados y partes de trabajo de manera sencilla y centralizada.  
-<p align="center"> <img src="./assets/miniatura_agrotrack.png" alt="Logo AgroTrack" width="250" /> </p>
 
 Proyecto desarrollado con **Spring Boot (backend)** y **React + Tailwind (frontend)**.  
 

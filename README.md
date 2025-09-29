@@ -25,6 +25,10 @@ Proyecto desarrollado con **Spring Boot (backend)** y **React + Tailwind (fronte
 
 
 ---
+![Dashboard](./assets/dashboard.png)
+![Empleados](./assets/empleados.png)
+![Campañas](./assets/campanas.png)
+---
 
 ## ✨ Funcionalidades principales
 
@@ -74,7 +78,7 @@ cd agrotrack-backend
 cd agrotrack-frontend
 npm install
 npm run dev
-´´´
+```
 
 ## 👨‍💻 Autor
 

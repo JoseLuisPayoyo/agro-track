@@ -27,7 +27,9 @@ Proyecto desarrollado con **Spring Boot (backend)** y **React + Tailwind (fronte
 ---
 ![Dashboard](./assets/dashboard.png)
 ![Empleados](./assets/empleados.png)
-![Campañas](./assets/campanas.png)
+![Campañas](./assets/campanias.png)
+![Fincas](./assets/fincas.png)
+![Parcelas](./assets/parcelas.png)
 ---
 
 ## ✨ Funcionalidades principales

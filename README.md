@@ -1,25 +1,81 @@
 # 🌱 AgroTrack
 
-AgroTrack es una aplicación de **gestión agrícola** diseñada para modernizar el control de empleados, cuadrillas, fincas, campañas y partes de trabajo diarios.  
-Está construida con **Spring Boot (backend)** y **React + Tailwind (frontend)**, siguiendo buenas prácticas para garantizar **escalabilidad, calidad y facilidad de uso**.
+**AgroTrack** es una aplicación **fullstack** para la gestión agrícola.  
+Permite administrar empleados, cuadrillas, campañas, fincas, parcelas, certificados y partes de trabajo de manera sencilla y centralizada.  
+
+Proyecto desarrollado con **Spring Boot (backend)** y **React + Tailwind (frontend)**.  
 
 ---
 
-## 🚀 Tecnologías principales
-- **Backend:** Java 21, Spring Boot 3, Spring Data JPA, MapStruct, Flyway, PostgreSQL
-- **Frontend:** React 18, Vite, TypeScript, Tailwind CSS, React Query
-- **Infraestructura:** Docker Compose, pgAdmin
-- **Testing:** JUnit 5, Mockito, Testcontainers
+## 🚀 Tecnologías usadas
+
+### Backend
+- ☕ **Java 21** + **Spring Boot 3**
+- 🗄️ **PostgreSQL** como base de datos
+- 📦 **Maven** para gestión de dependencias
+- 🔑 **Spring Validation** para validaciones
+- 📑 DTOs, Mappers y Services con buenas prácticas
+
+### Frontend
+- ⚛️ **React 18**
+- 🎨 **TailwindCSS** para estilos
+- 🔄 **Axios** para consumo de API
+- 🧭 **React Router** para navegación
+- ✅ Manejo de modales, confirmaciones y notificaciones (react-hot-toast)
+
 
 ---
 
-## 📌 Funcionalidades (MVP)
-- Gestión de empleados agrícolas con certificaciones y caducidades
-- Cuadrillas con capataz y trabajadores
-- Fincas y parcelas registradas en el sistema
-- Campañas agrícolas (ej. recolección anual)
-- Partes de trabajo diarios (horas y rendimiento opcional en kilos/cajas)
-- Dashboard inicial con KPIs (empleados activos, partes abiertos/cerrados, horas totales, alertas de certificaciones)
+## ✨ Funcionalidades principales
+
+- **Empleados**  
+  - Crear, editar, eliminar empleados  
+  - Ver certificados por empleado  
+  - Asignar cuadrilla y finca  
+
+- **Certificados**  
+  - Gestionar certificados asociados a empleados  
+  - Tipos: `FITOSANITARIO`, `MANEJO_CARRETILLA`, `USO_EPI`, `PRL_BASICO`, `MANEJO_MAQUINARIA`  
+
+- **Cuadrillas**  
+  - Crear cuadrillas y asignar un encargado (foreman)  
+  - Ver listado y gestionar cuadrillas  
+
+- **Campañas**  
+  - Crear campañas ligadas a una finca y una cuadrilla  
+  - Editar, eliminar y listar campañas  
+
+- **Fincas y parcelas**  
+  - Crear fincas y sus parcelas  
+  - Relacionar campañas y partes con fincas  
+
+- **Partes de trabajo**  
+  - Crear partes diarios de trabajo  
+  - Asociar finca, parcela, campaña y cuadrilla   
+
+- **Dashboard inicial**  
+  - Resumen de métricas: nº empleados, campañas, fincas, cuadrillas y partes  
+  - Gráfico con estadísticas del estado de los empleados  
+
+---
+
+## 📸 Capturas de pantalla
+
+*(Incluye aquí 3-4 imágenes del dashboard, empleados, campañas y partes de trabajo con tus datos de ejemplo)*  
+
+---
+
+## ⚙️ Instalación y ejecución
+
+### Backend
+```bash
+cd agrotrack-backend
+./mvnw spring-boot:run
+cd agrotrack-frontend
+npm install
+npm run dev
+´´´
+
 
 
 
